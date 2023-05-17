@@ -1,1 +1,3 @@
-#fpga
+In this implementation, xorshift32 is the function that generates the pseudo-random numbers using the XORshift algorithm. It takes a pointer to an unsigned integer state as a parameter, which represents the current state of the algorithm. The function updates the state and returns the generated random number.
+In the main function, we initialize the state with an arbitrary value (123456789 in this case), and then we call xorshift32 in a loop to generate and print 10 random numbers.
+Note that this implementation uses a 32-bit version of the XORshift algorithm. If you need a different bit size, you can modify the shift amounts accordingly. Also, make sure to seed the initial state with a non-zero value for better randomness.
