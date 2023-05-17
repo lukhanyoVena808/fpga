@@ -5,11 +5,12 @@
 */
 
 #include <stdio.h>
+#include<stdint.h>
 
-unsigned int xorshift32(unsigned int *state) {
+uint32_t xorshift32(uint32_t *state) {
    // this implementation uses a 32-bit version of the XORshift algorithm
 
-    unsigned int temp = *state; //temporary state
+    uint32_t temp = *state; //temporary state
     temp ^= temp << 7;
     temp ^= temp >> 9;
     temp ^= temp << 13;
@@ -18,11 +19,11 @@ unsigned int xorshift32(unsigned int *state) {
 }
 
 int main() {
-    unsigned int state = 123456789;  // Initial state, which is arbitrary. 
+    uint32_t state = 123456789;  // Initial state, which is arbitrary. 
 
     // Generate and print 10 random numbers
     for (int i = 0; i < 10; i++) {
-        unsigned int random = xorshift32(&state);
+        uint32_t random = xorshift32(&state);
         printf("%u\n", random);
     }
 
