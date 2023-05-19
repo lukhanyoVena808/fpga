@@ -24,12 +24,12 @@ module lfsr_tb(
 
     );
     localparam N = 32;
-    localparam Num=3;
-    //localparam j=0;
-    reg clk, reset_n;
-    wire [1:N] Q;
-    reg [Num-1:0] seedArray;
+    parameter Num=3;
+    reg [Num-1:0]clk, reset_n;
+    wire [Num-1:0] Q;
+
     
+    RNG #(.Num(Num)) md(.clk(clk),.reset_n(reset_n),.Q(Q));
    
     
     // Instantuate unit under test
@@ -62,7 +62,7 @@ module lfsr_tb(
         clk = 1'b1;
         #(T / 2);
     end
-     generator #(.Num(Num)) MOD(.seedArr(seedArray))
+    // generator #(.Num(Num)) MOD(.seedArr(seedArray))
     /*
     initial begin
         clk = 1'b0;
@@ -81,11 +81,11 @@ module lfsr_tb(
         reset_n = 1'b0;
         #2 //#5; 
         reset_n = 1'b1;
-        seedArray <=0;
+       
+        $monitor("Q:%d",Q);
         
-        $monitor ("Q=%d",Q);
         
-        #10 seedArray<=12;
+      
         
    
         repeat(2) @(negedge clk);

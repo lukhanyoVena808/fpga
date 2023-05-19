@@ -23,7 +23,7 @@
 module lfsr
     #(parameter N = 32)( //No of bits =N, can specify seed at instantiation
     input clk,
-    input seed,
+    //input seed,
     input reset_n,
     output [1:N] Q//generated random number register
     
@@ -39,8 +39,8 @@ module lfsr
     always @(posedge clk, negedge reset_n)//on positive clk or negative reset
     begin
         if (~reset_n) //if reset==0, initial state
-           // Q_reg <= 'd1; // LSFR seed can be anything except 0 or FFFFFFFF
-            Q_reg <= seed;
+            Q_reg <= 'd1; // LSFR seed can be anything except 0 or FFFFFFFF
+            //Q_reg <= seed;
         else
             Q_reg <= Q_next; //assign the next generated number to register
             count=count+1;
@@ -64,17 +64,18 @@ module lfsr
         
 endmodule
 
-module generator
+module RNG
  #(parameter Num=3)(
- input [Num-1:0] seedArr
+ input [Num-1:0] clk,
+ input [Num-1:0] reset_n,
+ output [Num-1:0] Q // [Num-1:0] Q [1:N]
+ 
  );
  
  genvar i;
  generate 
     for(i=0;i<Num;i=i+1)begin
-        lfsr #(.N(32)) mod (clk,seedArr[i],
-                reset_n,
-                Q);
+        lfsr #(.N(32)) mod (clk[i],reset_n[i],Q[i]);
         end
  endgenerate 
  
