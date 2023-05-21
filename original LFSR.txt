@@ -1,0 +1,124 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: UCT
+// Engineer: Team 10
+// 
+// Create Date: 15/05/2023
+// Design Name: Linear feedback shift register
+// Module Name: lfsr_tb FIBONNACCI VERSION
+// Project Name: PRNG
+// Target Devices: Nexys A7 100-T
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module lfsr
+    #(parameter N = 32,parameter seed='d1)( //No of bits =N
+    input clk,
+    input reset_n,
+    output [1:N] Q//generated random number register
+    //seed is a param which can be chosen when instantiating module
+    
+    );
+    
+    
+    //Assumes MSB is bit 1, LSB=bit N, not strating from 0 but this can be changed
+    reg [1:N] Q_reg, Q_next;
+    wire taps; //positions that are XOR to get next state
+
+    always @(posedge clk, negedge reset_n)//on positive clk or negative reset
+    begin
+        if (~reset_n) //if reset==0, initial state
+           // Q_reg <= 'd1; // LSFR seed can be anything except 0 or FFFFFFFF
+            Q_reg <= seed;
+        else
+            Q_reg <= Q_next; //assign the next generated number to register
+    end
+    
+    // Next state logic
+    always @(taps, Q_reg)
+        Q_next = {taps, Q_reg[1:N - 1]}; //equivalent to left shift and XOR
+                                        //with Taps
+
+        
+    // Output logic
+    assign Q = Q_reg; //assign current state to output signal
+    //-------------------------------------------------------------    
+
+    //N=32, tap positions give the longest period before repeats see docs
+     assign taps=Q_reg[32] ^ Q_reg[22]^ Q_reg[2] ^ Q_reg[1];
+
+        
+endmodule
+
+//////////////////////////////////////////////////////////////////////////////////
+// Company: UCT
+// Engineer: Team 10
+// 
+// Create Date: 15/05/2023
+// Design Name: Linear feedback shift register
+// Module Name: lfsr_tb
+// Project Name: PRNG
+// Target Devices: Nexys A7 100-T
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module lfsr_tb(
+
+    );
+    
+    localparam N = 32;
+    reg clk, reset_n;
+    wire [1:N] Q;
+    
+    // Instantuate unit under test
+    lfsr #(.N(N)) uut (
+        .clk(clk),
+        .reset_n(reset_n),
+        .Q(Q)
+    );
+    
+   
+    // Generating a clk signal
+    localparam T = 10; //10ns
+    always
+    begin
+        clk = 1'b0;
+        #(T / 2); //toggle clock evry 5ns
+        clk = 1'b1;
+        #(T / 2);
+    end
+    
+    initial
+    begin
+        // issue a quick reset for 2 ns
+        reset_n = 1'b0;
+        #2  
+        reset_n = 1'b1;
+        
+        repeat(2) @(negedge clk);
+        wait (Q == 1); //halts exec until Q=1 then stops
+        //stops simulation when a full period has elapsed if we start at 1
+        //generates a random number every 10ns
+        //runs for 1000ns so generates 100 random numbers sequentially
+        
+        #20 $stop;
+    end
+    
