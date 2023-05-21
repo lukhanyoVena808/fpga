@@ -25,8 +25,13 @@ module lfsr_tb(
     );
     localparam N = 32;
     parameter Num=3;
-    reg [Num-1:0]clk, reset_n;
-    wire [Num-1:0] Q;
+   // reg [Num:1]clk, reset_n;
+   // wire [Num:1] Q;
+    
+    reg clk,reset_n;
+    //wire Q;
+    wire [1:N] Q;
+    
 
     
     RNG #(.Num(Num)) md(.clk(clk),.reset_n(reset_n),.Q(Q));
@@ -94,8 +99,8 @@ module lfsr_tb(
         //generates a random number every 10ns
         //runs for 1000ns so generates 100 random numbers sequentially
         
-        #20 $stop;
-       // #100 $finish;
+        //#20 $stop;
+       #100 $finish;
     end
     
 endmodule
