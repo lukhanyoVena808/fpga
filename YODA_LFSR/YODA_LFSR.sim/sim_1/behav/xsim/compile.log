@@ -1,4 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ERIC/Documents/4th Year/EEE4120F/project/M7 Counters Applications/Source/lfsr.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module lfsr
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ERIC/Documents/4th Year/EEE4120F/project/M7 Counters Applications/Sim/lfsr_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module lfsr_tb
